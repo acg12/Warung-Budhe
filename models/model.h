@@ -1,15 +1,16 @@
-#define TABLE_SIZE 100
+#define TABLE_SIZE 101
 
 struct Dish {
     char name[255];
     int price;
     int quantity;
-} *headDish, *headTail;
+    Dish *next;
+} *headDish, *tailDish, *currDish;
 
 struct Customer {
     char name[255];
+    Customer *next, *prev;
     Dish *ordHead, *ordTail;
-};
+} *headCust[TABLE_SIZE], *tailCust[TABLE_SIZE], *currCust;
 
-struct Customer custTable[TABLE_SIZE][255];
-int currCust;
+int availCust[TABLE_SIZE] = {};

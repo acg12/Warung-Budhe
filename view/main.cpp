@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include ".//controller.h"
+#include "..//controllers//controller.h"
 
 void addDish();
 void removeDish();
@@ -8,11 +8,13 @@ void searchCust();
 void viewWarteg();
 void order();
 void payment();
+void splashScreen();
 
 int main()
 {
     int main = 0;
     do {
+        clear();
         printf("System: %s\n", detectOS());
         // printf("date");
         printf("1. Add Dish\n");
@@ -54,21 +56,14 @@ int main()
         }
     } while (main != 8);
 
-    printf("Please expand your terminal to full screen!\n");
-    pressEnter();
-
-    FILE *fp = fopen("splash-screen.txt", "r");
-    while (!feof(fp)) {
-        char string[103];
-        fscanf(fp, "%[^\n]\n", string);
-        printf("%s\n", string);
-    }
+    splashScreen();
 
     return 0;
 }
 
 void addDish()
 {
+    clear();
     char name[255];
     int price, qty;
     do {
@@ -93,6 +88,13 @@ void addDish()
 
 void removeDish()
 {
+    clear();
+    if (!headDish) {
+        printf("There are no dishes yet!\n");
+        pressEnter();
+        return;
+    }
+
     char name[255];
     printDishes();
 
@@ -108,11 +110,14 @@ void removeDish()
 
 void addCust()
 {
+    clear();
     char name[255];
     do {
         printf("Insert the customer's name [Without space]: ");
         scanf("%[^\n]", name); getchar();
     } while (validCustName(name) == 0);
+
+    insertCust(name);
 
     printf("Customer has been added!\n");
     pressEnter();
@@ -120,11 +125,13 @@ void addCust()
 
 void searchCust()
 {
+    clear();
     char name[255];
     printf("Insert the customer's name to be searched: ");
     scanf("%[^\n]", name); getchar();
 
-    if (searchCustName(name) == 0) {
+    currCust = searchCustName(name);
+    if (!currCust) {
         printf("%s is not present\n", name);
     } else {
         printf("%s is present\n", name);
@@ -135,29 +142,96 @@ void searchCust()
 
 void viewWarteg()
 {
+    clear();
+    printf("Customer's List\n");
     printCusts();
     pressEnter();
 }
 
 void order()
 {
+    clear();
+    if (!headDish) {
+        printf("There are no dishes yet!\n");
+        pressEnter();
+        return;
+    }
+    
     char name[255];
     do {
         printf("Insert the customer's name: ");
         scanf("%[^\n]", name); getchar();
-    } while (searchCustName(name) == 0);
+        currCust = searchCustName(name);
+    } while (!currCust);
 
     int total;
     printf("Insert the amount of dish: ");
-    scanf("%d", &total);
+    scanf("%d", &total); getchar();
 
-    char orders[total][255];
-    for (int i = 0; i < total; i++) {
-        printf("[%d] Insert the dish's name and quantity: ");
-        scanf("%[^\n]", orders[i]);
-
-        
+    char order[255];
+    int quant;
+    for (int i = 1; i <= total; i++) {
+        do {
+            printf("[%d] Insert the dish's name and quantity: ", i);
+            scanf("%[^x]x%d", order, &quant); getchar();
+            order[strlen(order) - 1] = '\0';
+        } while (dishAvail(order, quant) == 0);
+        pushOrder(order, quant);
     }
+
+    printf("Order success!\n");
+    pressEnter();
 }
 
-void payment();
+void payment()
+{
+    clear();
+    char name[255];
+    do {
+        printf("Insert the customer's name: ");
+        scanf("%[^\n]", name); getchar();
+        currCust = searchCustName(name);
+    } while (!currCust);
+
+    if (!currCust->ordHead) {
+        printf("You haven't ordered anything yet!\n");
+        pressEnter();
+        return;
+    }
+
+    printf("%s\n", name);
+
+    Dish *temp = currCust->ordHead;
+    int total = 0;
+    for (int i = 1; temp != NULL; i++) {
+        printf("[%d] %s x%d\n", i, temp->name, temp->quantity);
+        total += (temp->price * temp->quantity);
+        temp = temp->next;
+    }
+
+    printf("Total: Rp%d\n", total);
+    pressEnter();
+
+    temp = currCust->ordHead;
+    while (temp != NULL) {
+        temp = temp->next;
+        popOrder();
+    }
+
+    deleteCust(name);
+}
+
+void splashScreen()
+{
+    clear();
+    printf("Please expand your terminal to full screen!\n");
+    pressEnter();
+
+    FILE *fp = fopen("splash-screen.txt", "r");
+    while (!feof(fp))
+    {
+        char string[103];
+        fscanf(fp, "%[^\n]\n", string);
+        printf("%s\n", string);
+    }
+}
