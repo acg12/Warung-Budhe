@@ -157,6 +157,7 @@ void order()
         return;
     }
     
+    printDishes();
     char name[255];
     do {
         printf("Insert the customer's name: ");
@@ -193,12 +194,6 @@ void payment()
         currCust = searchCustName(name);
     } while (!currCust);
 
-    if (!currCust->ordHead) {
-        printf("You haven't ordered anything yet!\n");
-        pressEnter();
-        return;
-    }
-
     printf("%s\n", name);
 
     Dish *temp = currCust->ordHead;
@@ -234,4 +229,5 @@ void splashScreen()
         fscanf(fp, "%[^\n]\n", string);
         printf("%s\n", string);
     }
+    fclose(fp);
 }

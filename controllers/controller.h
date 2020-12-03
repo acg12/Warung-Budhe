@@ -253,6 +253,7 @@ void printDishes() {
         while (temp != NULL) {
             printf("%4d. %-19s %03d%-6s Rp%-8d\n", i, temp->name, temp->quantity, " ", temp->price);
             temp = temp->next;
+            i++;
         }
         printf("==============================================\n");
     }
