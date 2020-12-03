@@ -344,6 +344,6 @@ const char *detectOS()
 }
 
 void clear() {
-    for (int i = 0; i < 10000; i++)
+    for (int i = 0; i < 40; i++)
         puts("");
 }
