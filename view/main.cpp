@@ -57,6 +57,7 @@ int main()
     } while (main != 8);
 
     splashScreen();
+    getchar();
 
     return 0;
 }
