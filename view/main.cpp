@@ -16,7 +16,8 @@ int main()
     do {
         clear();
         printf("System: %s\n", detectOS());
-        // printf("date");
+        time(&t);
+        printf("%s", ctime(&t));
         printf("1. Add Dish\n");
         printf("2. Remove Dish\n");
         printf("3. Add Customer\n");
@@ -57,7 +58,6 @@ int main()
     } while (main != 8);
 
     splashScreen();
-    getchar();
 
     return 0;
 }

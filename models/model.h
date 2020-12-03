@@ -1,5 +1,5 @@
+#include <time.h>
 #define TABLE_SIZE 101
-
 struct Dish {
     char name[255];
     int price;
@@ -14,3 +14,5 @@ struct Customer {
 } *headCust[TABLE_SIZE], *tailCust[TABLE_SIZE], *currCust;
 
 int availCust[TABLE_SIZE] = {};
+
+time_t t;
