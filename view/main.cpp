@@ -226,6 +226,7 @@ void payment()
 
     printf("%s\n", name);
 
+    // print orders
     Dish *temp = currCust->ordHead;
     int total = 0;
     for (int i = 1; temp != NULL; i++)
